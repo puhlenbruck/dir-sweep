@@ -1,0 +1,5 @@
+out/
+.stack-work/
+*.sw*
+.idea/
+*.iml
