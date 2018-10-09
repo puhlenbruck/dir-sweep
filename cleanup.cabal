@@ -27,6 +27,7 @@ executable cleanup
                      , cleanup
                      , directory >= 1.2.5.0
                      , time
+                     , optparse-applicative
   default-language:    Haskell2010
 
 test-suite cleanup-test
