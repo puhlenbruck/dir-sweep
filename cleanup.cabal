@@ -29,7 +29,7 @@ executable cleanup
                      , time
                      , optparse-applicative
   default-language:    Haskell2010
-
+  other-modules:       CLI
 test-suite cleanup-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test

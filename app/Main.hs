@@ -1,36 +1,18 @@
 module Main where
 
-import Options.Applicative
-import Data.Semigroup ((<>))
+import Options.Applicative(execParser)
 import System.Directory
 import Data.Time.Clock
 import Data.List (sortOn)
 import Data.Ord
-import Text.Read
 import Data.Maybe
+
+import CLI
 
 main :: IO ()
 main = do
   opts <- execParser programOpts
   sequence_ $ fmap (runForDir opts) (dirs opts)
-
-data Options = Options 
-  { dirs :: [FilePath]
-  , maxKeepCount :: Maybe Int
-  }
-
-programOpts = info (options <**> helper)
-  (fullDesc
-  <> progDesc "Clean old files from a directory"
-  <> header "cleanup - a temp directory cleaning tool")
-
-options :: Parser Options
-options = Options
-  <$> some ( argument str (metavar "TARGET..." <> help "directories to clean" ))
-  <*> option optionalInt (long "max-keep" <> short 'n' <> help "the maximum number of files to keep" <> value Nothing <> metavar "MAX-KEEP")
-
-optionalInt :: ReadM (Maybe Int)
-optionalInt = eitherReader $ \s -> maybe (Left $ "Cannot parse max-keep value '" ++ s ++ "'. Must be an integer.") (Right . Just) (readMaybe s)
 
 runForDir :: Options -> FilePath -> IO ()
 runForDir opts dir = do

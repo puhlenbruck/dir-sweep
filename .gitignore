@@ -1,5 +1,6 @@
 out/
 .stack-work/
 *.sw*
+testfiles/
 .idea/
 *.iml
