@@ -1,18 +1,24 @@
 module Main where
 
-import Options.Applicative(execParser)
-import System.Directory
+import Control.Monad (when)
 import Data.Time.Clock
 import Data.List (sortOn)
 import Data.Ord
 import Data.Maybe
+import Options.Applicative(execParser)
+import System.Directory
+import System.IO (hPrint, stderr)
 
 import CLI
 
 main :: IO ()
 main = do
   opts <- execParser programOpts
+  when (verbose opts) $ verboseOutput opts
   sequence_ $ fmap (runForDir opts) (dirs opts)
+
+verboseOutput :: Show a => a -> IO ()
+verboseOutput = hPrint stderr
 
 runForDir :: Options -> FilePath -> IO ()
 runForDir opts dir = do

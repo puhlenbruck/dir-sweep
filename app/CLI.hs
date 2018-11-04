@@ -1,15 +1,26 @@
 module CLI where
 
-import Options.Applicative
+import Control.Arrow (left)
+import Data.Char (toLower, toUpper)
 import Data.Semigroup ((<>))
-import Text.Read
-
+import Options.Applicative
+import Text.Read (readEither)
 
 
 data Options = Options 
   { dirs :: [FilePath]
   , maxKeepCount :: Maybe Int
-  }
+  , subDirMode :: SubDirMode
+  , verbose :: Bool
+  } deriving (Show)
+
+data SubDirMode = File | Ignore | Recursive
+  deriving (Read, Show)
+
+dirMode :: ReadM SubDirMode
+dirMode = eitherReader parse
+  where parse (first:rest) = (readEither $ (toUpper first) : (map toLower rest))
+
 
 programOpts = info (options <**> helper)
   (fullDesc
@@ -18,8 +29,14 @@ programOpts = info (options <**> helper)
 
 options :: Parser Options
 options = Options
-  <$> some ( argument str (metavar "TARGET..." <> help "directories to clean" ))
-  <*> option optionalInt (long "max-keep" <> help "the maximum number of files to keep" <> value Nothing <> metavar "MAX-KEEP")
+  <$> some ( argument str (metavar "TARGET..." <> help "directories to clean." ))
+  <*> option optionalInt (long "max-keep" <> help "the maximum number of files to keep." <> value Nothing <> metavar "MAX-KEEP")
+  <*> option dirMode (long "sub-dir" <> value File <> help subDirModeHelpMessage <> metavar "MODE")
+  <*> switch (short 'v' <> long "verbose")
 
 optionalInt :: ReadM (Maybe Int)
-optionalInt = eitherReader $ \s -> maybe (Left $ "Cannot parse max-keep value '" ++ s ++ "'. Must be an integer.") (Right . Just) (readMaybe s)
+optionalInt = eitherReader $ \s -> 
+  left (\_ -> "Cannot parse max-keep value '" ++ s ++ "'. Must be an integer.") (fmap Just $ readEither s)
+
+subDirModeHelpMessage :: String
+subDirModeHelpMessage = "How to treat subdirectories. FILE (default), IGNORE, or RECURSIVE.  FILE will treat entire directory as a single file without considering it's contents."
