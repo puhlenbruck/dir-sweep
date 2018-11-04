@@ -1,4 +1,4 @@
-module CLI where
+module CLI (programOpts, Options(..), SubDirMode(..)) where
 
 import Control.Arrow (left)
 import Data.Char (toLower, toUpper)

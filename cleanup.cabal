@@ -28,8 +28,10 @@ executable cleanup
                      , directory >= 1.2.5.0
                      , time
                      , optparse-applicative
+                     , filepath
   default-language:    Haskell2010
   other-modules:       CLI
+
 test-suite cleanup-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
