@@ -1,6 +1,7 @@
+{-# LANGUAGE NamedFieldPuns #-}
 module Main where
 
-import Control.Monad (when, filterM)
+import Control.Monad (when, filterM, unless)
 import Data.Time.Clock
 import Data.List (sortOn)
 import Data.Ord
@@ -8,24 +9,34 @@ import Data.Maybe
 import Options.Applicative(execParser)
 import System.Directory
 import System.FilePath ((</>))
-import System.IO (hPrint, stderr)
+import System.IO (hPrint, hPutStrLn, stderr)
 
 import CLI
 
 main :: IO ()
 main = do
-  opts <- execParser programOpts
-  when (verbose opts) $ verboseOutput opts
-  sequence_ $ fmap (runForDir opts) (dirs opts)
+  opts@Options{verbose, dryRun} <- execParser programOpts
+  when verbose $ verbosePrint opts
+  filesToDelete <- concat <$> traverse (filesForDir opts) (dirs opts)
+  when dryRun $ mapM_ print filesToDelete
+  unless dryRun $ errPutStrLn "File deletion not yet implemented.  Use -d or --dry-run to see files that would be deleted."
 
-verboseOutput :: Show a => a -> IO ()
-verboseOutput = hPrint stderr
+errPutStrLn :: String -> IO ()
+errPutStrLn = hPutStrLn stderr
 
-runForDir :: Options -> FilePath -> IO ()
-runForDir opts dir = do
+verboseMessage :: String -> IO ()
+verboseMessage = errPutStrLn
+
+errPrint :: Show a => a -> IO ()
+errPrint = hPrint stderr
+
+verbosePrint :: Show a => a -> IO ()
+verbosePrint = errPrint
+
+filesForDir :: Options -> FilePath -> IO [FileAndModTime]
+filesForDir opts dir = do
   files <- sortOn (Down . modifyTime) <$> listFiles opts dir
-  let filesToRemove = maybeDrop (maxKeepCount opts) files
-  mapM_ print filesToRemove
+  return $ maybeDrop (maxKeepCount opts) files
 
 maybeDrop :: Maybe Int -> [a] -> [a]
 maybeDrop (Just n) = drop n
@@ -52,7 +63,7 @@ handleDirectories Ignore files = filterM doesFileExist files
 handleDirectories Recursive files = listAllFiles files
 
 listAllFiles :: [FilePath] -> IO [FilePath]
-listAllFiles files = fmap concat $ sequence $ map subFiles files
+listAllFiles files = concat <$> traverse subFiles files
 
 subFiles :: FilePath -> IO [FilePath]
 subFiles file = do
