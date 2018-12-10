@@ -19,7 +19,7 @@ main = do
   when verbose $ verbosePrint opts
   filesToDelete <- concat <$> traverse (filesForDir opts) (dirs opts)
   when dryRun $ mapM_ print filesToDelete
-  unless dryRun $ errPutStrLn "File deletion not yet implemented.  Use -d or --dry-run to see files that would be deleted."
+  unless dryRun $ deleteFiles filesToDelete
 
 errPutStrLn :: String -> IO ()
 errPutStrLn = hPutStrLn stderr
@@ -32,6 +32,10 @@ errPrint = hPrint stderr
 
 verbosePrint :: Show a => a -> IO ()
 verbosePrint = errPrint
+
+{- TODO: This is very simple and not robust.  Error handling and verbose output support will still be needed -}
+deleteFiles :: [FileAndModTime] -> IO ()
+deleteFiles files = mapM_ removeFile [name file | file <- files]
 
 filesForDir :: Options -> FilePath -> IO [FileAndModTime]
 filesForDir opts dir = do
