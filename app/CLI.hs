@@ -11,6 +11,7 @@ data Options = Options
   { dirs :: [FilePath]
   , maxKeepCount :: Maybe Int
   , subDirMode :: SubDirMode
+  , dryRun :: Bool
   , verbose :: Bool
   } deriving (Show)
 
@@ -19,7 +20,7 @@ data SubDirMode = File | Ignore | Recursive
 
 dirMode :: ReadM SubDirMode
 dirMode = eitherReader parse
-  where parse (first:rest) = (readEither $ (toUpper first) : (map toLower rest))
+  where parse (first:rest) = readEither $ (toUpper first) : (map toLower rest)
 
 
 programOpts = info (options <**> helper)
@@ -32,7 +33,8 @@ options = Options
   <$> some ( argument str (metavar "TARGET..." <> help "directories to clean." ))
   <*> option optionalInt (long "max-keep" <> help "the maximum number of files to keep." <> value Nothing <> metavar "MAX-KEEP")
   <*> option dirMode (long "sub-dir" <> value File <> help subDirModeHelpMessage <> metavar "MODE")
-  <*> switch (short 'v' <> long "verbose")
+  <*> switch (short 'd' <> long "dry-run" <> help "Do not delete files but print files that would be deleted")
+  <*> switch (short 'v' <> long "verbose" <> help "enable verbose output")
 
 optionalInt :: ReadM (Maybe Int)
 optionalInt = eitherReader $ \s -> 
