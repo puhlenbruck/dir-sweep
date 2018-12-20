@@ -17,7 +17,7 @@ import Messaging
 main :: IO ()
 main = do
   opts@Options{verbose, dryRun} <- execParser programOpts
-  when verbose $ verbosePrint opts
+  when verbose $ infoPrint opts
   filesToDelete <- concat <$> traverse (filesForDir opts) (dirs opts)
   when dryRun $ mapM_ print filesToDelete
   unless dryRun $ deleteFiles filesToDelete

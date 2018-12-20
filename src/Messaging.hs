@@ -5,11 +5,11 @@ import System.IO (hPrint, hPutStrLn, stderr)
 errPutStrLn :: String -> IO ()
 errPutStrLn = hPutStrLn stderr
 
-verboseMessage :: String -> IO ()
-verboseMessage = errPutStrLn
+infoMessage :: String -> IO ()
+infoMessage = errPutStrLn
 
 errPrint :: Show a => a -> IO ()
 errPrint = hPrint stderr
 
-verbosePrint :: Show a => a -> IO ()
-verbosePrint = errPrint
+infoPrint :: Show a => a -> IO ()
+infoPrint = errPrint
