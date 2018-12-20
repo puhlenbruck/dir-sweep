@@ -9,9 +9,10 @@ import Data.Maybe
 import Options.Applicative(execParser)
 import System.Directory
 import System.FilePath ((</>))
-import System.IO (hPrint, hPutStrLn, stderr)
 
 import CLI
+import Util
+import Messaging
 
 main :: IO ()
 main = do
@@ -21,18 +22,6 @@ main = do
   when dryRun $ mapM_ print filesToDelete
   unless dryRun $ deleteFiles filesToDelete
 
-errPutStrLn :: String -> IO ()
-errPutStrLn = hPutStrLn stderr
-
-verboseMessage :: String -> IO ()
-verboseMessage = errPutStrLn
-
-errPrint :: Show a => a -> IO ()
-errPrint = hPrint stderr
-
-verbosePrint :: Show a => a -> IO ()
-verbosePrint = errPrint
-
 {- TODO: This is very simple and not robust.  Error handling and verbose output support will still be needed -}
 deleteFiles :: [FileAndModTime] -> IO ()
 deleteFiles files = mapM_ removeFile [name file | file <- files]
@@ -41,10 +30,6 @@ filesForDir :: Options -> FilePath -> IO [FileAndModTime]
 filesForDir opts dir = do
   files <- sortOn (Down . modifyTime) <$> listFiles opts dir
   return $ maybeDrop (maxKeepCount opts) files
-
-maybeDrop :: Maybe Int -> [a] -> [a]
-maybeDrop (Just n) = drop n
-maybeDrop Nothing  = id
 
 data FileAndModTime = FileAndModTime {name :: FilePath, modifyTime :: UTCTime}
   deriving (Show)
