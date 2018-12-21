@@ -19,11 +19,9 @@ programOpts = info ( options <**> helper <**> versionOption)
   <> progDesc "Clean old files from a directory"
   <> header "cleanup - a temp directory cleaning tool")
 
-versionString :: String
-versionString = showVersion version
-
 versionOption :: Parser (a -> a)
 versionOption = infoOption versionString (long "version" <> help "Show program version and exit")
+  where versionString = showVersion version
 
 options :: Parser Options
 options = Options
