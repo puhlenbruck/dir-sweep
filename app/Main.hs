@@ -6,17 +6,15 @@ import Data.Time.Clock
 import Data.List (sortOn)
 import Data.Ord
 import Data.Maybe
-import Options.Applicative(execParser)
 import System.Directory
 import System.FilePath ((</>))
 
+import Cleanup
 import CLI
-import Util
-import Messaging
 
 main :: IO ()
 main = do
-  opts@Options{verbose, dryRun} <- execParser programOpts
+  opts@Options{verbose, dryRun} <- getCommandLineOptions
   when verbose $ infoPrint opts
   filesToDelete <- concat <$> traverse (filesForDir opts) (dirs opts)
   when dryRun $ mapM_ print filesToDelete

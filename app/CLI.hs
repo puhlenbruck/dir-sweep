@@ -1,32 +1,29 @@
-module CLI (programOpts, Options(..), SubDirMode(..)) where
+module CLI (getCommandLineOptions) where
 
 import Control.Arrow (left)
 import Data.Char (toLower, toUpper)
+import Data.Version (showVersion)
 import Data.Semigroup ((<>))
 import Options.Applicative
 import Text.Read (readEither)
 
+import Cleanup
+import Paths_cleanup (version)
 
-data Options = Options 
-  { dirs :: [FilePath]
-  , maxKeepCount :: Maybe Int
-  , subDirMode :: SubDirMode
-  , dryRun :: Bool
-  , verbose :: Bool
-  } deriving (Show)
+getCommandLineOptions :: IO Options
+getCommandLineOptions = execParser programOpts
 
-data SubDirMode = File | Ignore | Recursive
-  deriving (Read, Show)
-
-dirMode :: ReadM SubDirMode
-dirMode = eitherReader parse
-  where parse (first:rest) = readEither $ (toUpper first) : (map toLower rest)
-
-
-programOpts = info (options <**> helper)
+programOpts :: ParserInfo Options
+programOpts = info ( options <**> helper <**> versionOption)
   (fullDesc
   <> progDesc "Clean old files from a directory"
   <> header "cleanup - a temp directory cleaning tool")
+
+versionString :: String
+versionString = showVersion version
+
+versionOption :: Parser (a -> a)
+versionOption = infoOption versionString (long "version" <> help "Show program version and exit")
 
 options :: Parser Options
 options = Options
@@ -35,6 +32,11 @@ options = Options
   <*> option dirMode (long "sub-dir" <> value File <> help subDirModeHelpMessage <> metavar "MODE")
   <*> switch (short 'd' <> long "dry-run" <> help "Do not delete files but print files that would be deleted")
   <*> switch (short 'v' <> long "verbose" <> help "enable verbose output")
+ 
+
+dirMode :: ReadM SubDirMode
+dirMode = eitherReader parse
+  where parse (first:rest) = readEither $ (toUpper first) : (map toLower rest)
 
 optionalInt :: ReadM (Maybe Int)
 optionalInt = eitherReader $ \s -> 
