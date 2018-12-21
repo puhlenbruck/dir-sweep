@@ -36,11 +36,11 @@ options = Options
 
 dirMode :: ReadM SubDirMode
 dirMode = eitherReader parse
-  where parse (first:rest) = readEither $ (toUpper first) : (map toLower rest)
+  where parse (first:rest) = readEither $ toUpper first : map toLower rest
 
 optionalInt :: ReadM (Maybe Int)
 optionalInt = eitherReader $ \s -> 
-  left (\_ -> "Cannot parse max-keep value '" ++ s ++ "'. Must be an integer.") (fmap Just $ readEither s)
+  left (\_ -> "Cannot parse max-keep value '" ++ s ++ "'. Must be an integer.") (Just <$> readEither s)
 
 subDirModeHelpMessage :: String
 subDirModeHelpMessage = "How to treat subdirectories. FILE (default), IGNORE, or RECURSIVE.  FILE will treat entire directory as a single file without considering it's contents."

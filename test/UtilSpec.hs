@@ -11,9 +11,9 @@ main :: IO ()
 main = hspec spec
 
 spec :: Spec
-spec = do
+spec =
   describe "maybeDrop" $ do
-    it "drops" $ do
+    it "drops" $
       maybeDrop (Just 2) [1, 2, 3, 4, 5] `shouldBe` [3, 4, 5]
     it "empty list returns empty list" $ property $
       \n ->  maybeDrop n ([] :: [Int]) === []
