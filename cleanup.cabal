@@ -17,9 +17,13 @@ library
   hs-source-dirs:      src
   exposed-modules:     Cleanup
   build-depends:       base >= 4.7 && < 5
+                     , directory >= 1.2.5 && < 2
+                     , filepath
+                     , time
   default-language:    Haskell2010
-  other-modules:       Cleanup.Options
+  other-modules:       Cleanup.Files
                      , Cleanup.Messaging
+                     , Cleanup.Options
                      , Cleanup.Util
 
 executable cleanup
@@ -28,10 +32,7 @@ executable cleanup
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , cleanup
-                     , directory >= 1.2.5.0
-                     , time
                      , optparse-applicative
-                     , filepath
   default-language:    Haskell2010
   other-modules:       CLI
 
