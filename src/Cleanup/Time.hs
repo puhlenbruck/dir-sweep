@@ -8,7 +8,7 @@ import Text.Read (readEither)
 calculateThresholdTime :: DiffTime -> IO UTCTime
 calculateThresholdTime timePeriod = do
   currentTime <- getCurrentTime
-  let nominalTimePeriod = realToFrac timePeriod
+  let nominalTimePeriod = negate . abs . realToFrac $ timePeriod
   return $ addUTCTime nominalTimePeriod currentTime
 
 parseDuration :: String -> Either String DiffTime

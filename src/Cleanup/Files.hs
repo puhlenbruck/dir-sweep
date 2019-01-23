@@ -10,7 +10,6 @@ import System.FilePath ((</>))
 
 import Cleanup.Messaging
 import Cleanup.Options
-import Cleanup.Util (maybeDrop)
 
 
 data FileAndModTime = FileAndModTime {name :: FilePath, modifyTime :: UTCTime} 
@@ -22,11 +21,10 @@ fileWithModTime file = do
   return $ FileAndModTime file modTime
 
 filesForDir :: Options -> FilePath -> IO [FileAndModTime]
-filesForDir opts dir = sortOn (Down . modifyTime) <$> listFiles dir
-  where listFiles dir = do
-            dirList <- listDirWithFullPaths dir
-            files <- handleDirectories (subDirMode opts) dirList
-            mapM fileWithModTime files 
+filesForDir opts dir = do
+  dirList <- listDirWithFullPaths dir
+  files <- handleDirectories (subDirMode opts) dirList
+  mapM fileWithModTime files 
 
 listDirWithFullPaths :: FilePath -> IO [FilePath]
 listDirWithFullPaths dir = do
