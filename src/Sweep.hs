@@ -1,5 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
-module Cleanup(module Cleanup) where
+module Sweep(module Sweep) where
 
 import Control.Applicative ((<$>))
 import Control.Monad (when, filterM, unless)
@@ -10,11 +10,11 @@ import Data.Maybe (Maybe, maybe, fromMaybe)
 import System.Directory
 import System.FilePath ((</>))
 
-import Cleanup.CLI as Cleanup
-import Cleanup.Files as Cleanup
-import Cleanup.Messaging as Cleanup
-import Cleanup.Options as Cleanup
-import Cleanup.Time as Cleanup
+import Sweep.CLI as Sweep
+import Sweep.Files as Sweep
+import Sweep.Messaging as Sweep
+import Sweep.Options as Sweep
+import Sweep.Time as Sweep
 
 run :: IO ()
 run = do

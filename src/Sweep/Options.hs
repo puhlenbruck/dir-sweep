@@ -1,4 +1,4 @@
-module Cleanup.Options (Options(..), SubDirMode(..)) where
+module Sweep.Options (Options(..), SubDirMode(..)) where
 
 import Data.Time.Clock (DiffTime)
 

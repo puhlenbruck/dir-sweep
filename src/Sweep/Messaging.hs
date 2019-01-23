@@ -1,4 +1,4 @@
-module Cleanup.Messaging where
+module Sweep.Messaging where
 
 import System.IO (hPrint, hPutStrLn, stderr)
 

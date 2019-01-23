@@ -1,6 +1,6 @@
 module Main where
 
-import Cleanup (run)
+import Sweep (run)
 
 main :: IO ()
 main = run

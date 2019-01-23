@@ -1,4 +1,4 @@
-module Cleanup.Time(calculateThresholdTime, parseDuration) where
+module Sweep.Time(calculateThresholdTime, parseDuration) where
   
 import Data.Char (isDigit, isSpace, toLower)
 import Data.Either

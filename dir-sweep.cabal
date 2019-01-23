@@ -1,8 +1,8 @@
-name:                cleanup
+name:                dir-sweep
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/cleanup#readme
+homepage:            https://github.com/githubuser/dir-sweep#readme
 license:             BSD3
 license-file:        LICENSE
 author:              Peter Uhlenbruck (peuhlenb@gmail.com)
@@ -15,34 +15,34 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Cleanup
+  exposed-modules:     Sweep
   build-depends:       base >= 4.7 && < 5
                      , directory >= 1.2.5 && < 2
                      , filepath
                      , optparse-applicative
                      , time
   default-language:    Haskell2010
-  other-modules:       Cleanup.CLI
-                     , Cleanup.Files
-                     , Cleanup.Messaging
-                     , Cleanup.Options
-                     , Cleanup.Time
+  other-modules:       Sweep.CLI
+                     , Sweep.Files
+                     , Sweep.Messaging
+                     , Sweep.Options
+                     , Sweep.Time
 
-executable cleanup
+executable dir-sweep
   hs-source-dirs:      app
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
-                     , cleanup
+                     , dir-sweep
   default-language:    Haskell2010
   other-modules:       
 
-test-suite cleanup-test
+test-suite dir-sweep-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
   build-depends:       base
-                     , cleanup
+                     , dir-sweep
                      , hspec
                      , QuickCheck
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
@@ -51,4 +51,4 @@ test-suite cleanup-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/cleanup
+  location: https://github.com/githubuser/dir-sweep

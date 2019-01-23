@@ -1,3 +1,3 @@
-# cleanup
+# Directory Sweeper (dir-sweep)
 
-add description of cleanup here
+A Utility to clean out old files from directories

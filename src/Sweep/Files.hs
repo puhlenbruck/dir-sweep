@@ -1,4 +1,4 @@
-module Cleanup.Files (FileAndModTime(..), deleteFiles, filesForDir) where
+module Sweep.Files (FileAndModTime(..), deleteFiles, filesForDir) where
 
 import Control.Monad (when, filterM, unless)
 import Data.List (sortOn)
@@ -8,8 +8,8 @@ import Data.Time.Clock (UTCTime)
 import System.Directory (doesDirectoryExist, doesFileExist, getModificationTime, listDirectory, removeDirectory, removeFile)
 import System.FilePath ((</>))
 
-import Cleanup.Messaging
-import Cleanup.Options
+import Sweep.Messaging
+import Sweep.Options
 
 data FileAndModTime = FileAndModTime {name :: FilePath, modifyTime :: UTCTime} 
   deriving (Show)

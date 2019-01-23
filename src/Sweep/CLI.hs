@@ -1,4 +1,4 @@
-module Cleanup.CLI (getCommandLineOptions) where
+module Sweep.CLI (getCommandLineOptions) where
 
 import Control.Arrow (left)
 import Data.Char (toLower, toUpper)
@@ -8,8 +8,8 @@ import Data.Semigroup ((<>))
 import Options.Applicative
 import Text.Read (readEither)
 
-import Cleanup.Options
-import Cleanup.Time(parseDuration)
+import Sweep.Options
+import Sweep.Time(parseDuration)
 
 getCommandLineOptions :: IO Options
 getCommandLineOptions = execParser programOpts
@@ -18,7 +18,7 @@ programOpts :: ParserInfo Options
 programOpts = info ( options <**> helper <**> versionOption)
   (fullDesc
   <> progDesc "Clean old files from a directory"
-  <> header "cleanup - a temp directory cleaning tool")
+  <> header "dir-sweep - a temp directory cleaning tool")
 
 versionOption :: Parser (a -> a)
 versionOption = infoOption versionString (short 'V' <> long "version" <> help "Show program version and exit")
