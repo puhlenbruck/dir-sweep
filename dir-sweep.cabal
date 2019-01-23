@@ -24,6 +24,7 @@ library
   default-language:    Haskell2010
   other-modules:       Sweep.CLI
                      , Sweep.Files
+                     , Sweep.Filter
                      , Sweep.Messaging
                      , Sweep.Options
                      , Sweep.Time
