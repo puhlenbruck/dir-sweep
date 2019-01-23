@@ -1,12 +1,17 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Sweep.Files (FileAndModTime(..), deleteFiles, filesForDir) where
 
+import Prelude hiding (catch)
+
+import Control.Exception
 import Control.Monad (when, filterM, unless)
 import Data.List (sortOn)
 import Data.Maybe
 import Data.Ord
 import Data.Time.Clock (UTCTime)
-import System.Directory (doesDirectoryExist, doesFileExist, getModificationTime, listDirectory, removeDirectory, removeFile)
+import System.Directory
 import System.FilePath ((</>))
+import System.IO.Error (isDoesNotExistError, isPermissionError)
 
 import Sweep.Messaging
 import Sweep.Options
@@ -50,18 +55,23 @@ deleteFileOrDirectory :: Bool -> FilePath -> IO ()
 deleteFileOrDirectory verbose path = do
   isDirectory <- doesDirectoryExist path
   if isDirectory
-    then deleteDirectory
-    else deleteFile
-  where
-    deleteDirectory = do
-      contents <- listDirectoryWithFullPaths path
-      case contents of
-        [] -> deleteEmptyDirectory
-        _  -> deleteFiles verbose contents >> deleteEmptyDirectory
-    deleteEmptyDirectory = do
-      removeDirectory path
-      when verbose $ infoMessage ("Deleted directory '" ++ path ++ "'")
-    deleteFile = do 
-      removeFile path
-      when verbose $ infoMessage ("Deleted file '" ++ path ++ "'")
+    then deleteDirectory verbose path
+    else deleteFile verbose path
 
+deleteDirectory :: Bool -> FilePath -> IO ()
+deleteDirectory verbose path = catch action (exceptionHandlers path "directory")
+  where action = do
+          removeDirectoryRecursive path
+          when verbose $ infoMessage ("Deleted directory '" ++ path ++ "'")
+
+deleteFile :: Bool -> FilePath -> IO ()
+deleteFile verbose path = catch action (exceptionHandlers path "file")
+  where action = do
+          removeFile path 
+          when verbose (infoMessage ("Deleted file '" ++ path ++ "'"))
+
+exceptionHandlers :: FilePath -> String -> IOError -> IO ()
+exceptionHandlers path pathType = handle
+  where handle ex | isDoesNotExistError ex = return ()
+                  | isPermissionError ex   = infoMessage $ "Unable to delete " ++ pathType ++ " '" ++ path ++ "'. Permission denied"
+                  | otherwise              = infoMessage $ "Unable to delete " ++ pathType ++ " '" ++ path ++ "'."
