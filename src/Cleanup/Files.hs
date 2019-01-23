@@ -11,7 +11,6 @@ import System.FilePath ((</>))
 import Cleanup.Messaging
 import Cleanup.Options
 
-
 data FileAndModTime = FileAndModTime {name :: FilePath, modifyTime :: UTCTime} 
   deriving (Show)
 
@@ -22,12 +21,12 @@ fileWithModTime file = do
 
 filesForDir :: Options -> FilePath -> IO [FileAndModTime]
 filesForDir opts dir = do
-  dirList <- listDirWithFullPaths dir
+  dirList <- listDirectoryWithFullPaths dir
   files <- handleDirectories (subDirMode opts) dirList
   mapM fileWithModTime files 
 
-listDirWithFullPaths :: FilePath -> IO [FilePath]
-listDirWithFullPaths dir = do
+listDirectoryWithFullPaths :: FilePath -> IO [FilePath]
+listDirectoryWithFullPaths dir = do
     files <- listDirectory dir
     return $ map (dir </>) files
 
@@ -41,21 +40,28 @@ listDirectoriesRecursively paths = fmap concat (mapM list paths)
   where list path = do
           isDirectory <- doesDirectoryExist path
           if isDirectory
-            then listDirectoriesRecursively =<< listDirectory path
+            then listDirectoriesRecursively =<< listDirectoryWithFullPaths path
             else return [path]
 
-deleteFiles :: [FilePath] -> IO ()
-deleteFiles = mapM_ deleteFileOrDirectory
+deleteFiles :: Bool -> [FilePath] -> IO ()
+deleteFiles verbose = mapM_ (deleteFileOrDirectory verbose)
 
-deleteFileOrDirectory :: FilePath -> IO ()
-deleteFileOrDirectory path = do
+deleteFileOrDirectory :: Bool -> FilePath -> IO ()
+deleteFileOrDirectory verbose path = do
   isDirectory <- doesDirectoryExist path
   if isDirectory
-    then deleteDirectory path
-    else removeFile path
+    then deleteDirectory
+    else deleteFile
   where
-    deleteDirectory path = do
-      contents <- listDirWithFullPaths path
+    deleteDirectory = do
+      contents <- listDirectoryWithFullPaths path
       case contents of
-        [] -> removeDirectory path
-        _  -> deleteFiles contents >> removeDirectory path
+        [] -> deleteEmptyDirectory
+        _  -> deleteFiles verbose contents >> deleteEmptyDirectory
+    deleteEmptyDirectory = do
+      removeDirectory path
+      when verbose $ infoMessage ("Deleted directory '" ++ path ++ "'")
+    deleteFile = do 
+      removeFile path
+      when verbose $ infoMessage ("Deleted file '" ++ path ++ "'")
+

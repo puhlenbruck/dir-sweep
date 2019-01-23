@@ -16,8 +16,6 @@ import Cleanup.Messaging as Cleanup
 import Cleanup.Options as Cleanup
 import Cleanup.Time as Cleanup
 
-import Debug.Trace
-
 run :: IO ()
 run = do
   opts@Options{dirs, maxKeepCount, minKeepCount, thresholdAge, verbose} <- getCommandLineOptions
@@ -30,18 +28,18 @@ run = do
     getThresholdTime Nothing = return Nothing
 
 runForDir :: Options -> FilterOptions -> FilePath -> IO ()
-runForDir opts@Options{dryRun} filterOptions dir = do
+runForDir opts@Options{dryRun, verbose} filterOptions dir = do
   candidateFiles <- filesForDir opts dir
   let filesToDelete = [name file | file <- filterFiles filterOptions candidateFiles]
   when dryRun $ mapM_ print filesToDelete
-  unless dryRun $ deleteFiles filesToDelete
+  unless dryRun $ deleteFiles verbose filesToDelete
 
 data FilterOptions = FilterOptions{thresholdTime :: Maybe UTCTime, maxKeep :: Maybe Int, minKeep :: Maybe Int}
   deriving (Show)
 
 filterFiles :: FilterOptions -> [FileAndModTime] -> [FileAndModTime]
-filterFiles FilterOptions{thresholdTime, maxKeep, minKeep} files = go minKeepValue  $ drop minKeepValue $ sortOn (Down . modifyTime) files
+filterFiles FilterOptions{thresholdTime, maxKeep, minKeep} files = go minKeepValue $ drop minKeepValue $ sortOn (Down . modifyTime) files
   where minKeepValue = fromMaybe 0 minKeep
-        go count (x:xs) | maybe False (count >=) maxKeep || maybe False (modifyTime x <) thresholdTime = reverse (x:xs)
+        go count (x:xs) | maybe False (count >=) maxKeep || maybe True (modifyTime x <) thresholdTime = reverse (x:xs)
                         | otherwise                                                                    = go (count + 1) xs
         go count [] = []
