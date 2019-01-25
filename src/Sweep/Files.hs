@@ -17,7 +17,7 @@ import Sweep.Messaging
 import Sweep.Options
 
 data FileAndModTime = FileAndModTime {name :: FilePath, modifyTime :: UTCTime} 
-  deriving (Show)
+  deriving (Show, Eq)
 
 fileWithModTime :: FilePath -> IO FileAndModTime
 fileWithModTime file = do

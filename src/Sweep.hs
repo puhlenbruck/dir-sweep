@@ -4,6 +4,7 @@ module Sweep(module Sweep) where
 import Control.Applicative ((<$>))
 import Control.Monad (when, filterM, unless)
 import System.Directory
+import System.Exit (die)
 import System.FilePath ((</>))
 
 import Sweep.CLI as Sweep
@@ -17,7 +18,7 @@ run :: IO ()
 run = do
   opts@Options{dirs, maxKeepCount, minKeepCount, thresholdAge, verbose} <- getCommandLineOptions
   thresholdTime <- getThresholdTime thresholdAge
-  let filterOptions = FilterOptions {thresholdTime, maxKeep=maxKeepCount, minKeep=minKeepCount}
+  filterOptions <- either die pure $ validatedFilterOptions thresholdTime maxKeepCount minKeepCount
   when verbose $ infoPrint opts
   mapM_ (runForDir opts filterOptions) dirs
   where
