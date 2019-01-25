@@ -2,12 +2,12 @@ name:                dir-sweep
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/dir-sweep#readme
+homepage:            https://github.com/puhlenbruck/dir-sweep#readme
 license:             BSD3
 license-file:        LICENSE
 author:              Peter Uhlenbruck (peuhlenb@gmail.com)
 maintainer:          Peter Uhlenbruck (peuhlenb@gmail.com)
-copyright:           2018 Peter Uhlenbruck
+copyright:           2018-2019 Peter Uhlenbruck
 category:            Utility
 build-type:          Simple
 extra-source-files:  README.md
