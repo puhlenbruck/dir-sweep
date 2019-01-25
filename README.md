@@ -61,9 +61,9 @@ Multiple target directories can be specified and each will be processed separate
 Sub-directories within the target directory are treated as a single file.  The entire directory will be recursivly deleted if it's modify time is older than the threshold.  This behaviour can be controlled with the `--sub-dir` option.
 
 The available options for `--sub-dir` are:
-- FILE (default) The entire directory is treated as a single file.  It will either be deleted entirely, or not at all.  It counts as only a single file to the deletion limits ((see below)[#Limits])
-- IGNORE Directories are ignored.  Only files will be deleted and counted in limits ((see below)[#Limits])
-- RECURSIVE Each file in a directory (and all it's sub-directories) will be considered individually against the threshold and limits ((see below)[#Limits]).  The directories themselves will not be deleted or counted.
+- FILE (default) The entire directory is treated as a single file.  It will either be deleted entirely, or not at all.  It counts as only a single file to the deletion limits (see below)
+- IGNORE Directories are ignored.  Only files will be deleted and counted in limits (see below)
+- RECURSIVE Each file in a directory (and all it's sub-directories) will be considered individually against the threshold and limits (see below).  The directories themselves will not be deleted or counted.
 
 
 ### Limits
