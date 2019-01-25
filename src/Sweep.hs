@@ -29,5 +29,5 @@ runForDir :: Options -> FilterOptions -> FilePath -> IO ()
 runForDir opts@Options{dryRun, verbose} filterOptions dir = do
   candidateFiles <- filesForDir opts dir
   let filesToDelete = [name file | file <- filterFiles filterOptions candidateFiles]
-  when dryRun $ mapM_ print filesToDelete
+  when dryRun $ mapM_ putStrLn filesToDelete
   unless dryRun $ deleteFiles verbose filesToDelete

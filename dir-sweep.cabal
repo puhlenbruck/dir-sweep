@@ -22,7 +22,8 @@ library
                      , optparse-applicative
                      , time
   default-language:    Haskell2010
-  other-modules:       Sweep.CLI
+  other-modules:       Paths_dir_sweep
+                     , Sweep.CLI
                      , Sweep.Files
                      , Sweep.Filter
                      , Sweep.Messaging
