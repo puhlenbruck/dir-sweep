@@ -3,7 +3,7 @@ version:             0.1.0.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/puhlenbruck/dir-sweep#readme
-license:             BSD3
+license:             BSD2
 license-file:        LICENSE
 author:              Peter Uhlenbruck (peuhlenb@gmail.com)
 maintainer:          Peter Uhlenbruck (peuhlenb@gmail.com)
