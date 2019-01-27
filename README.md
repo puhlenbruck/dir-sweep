@@ -1,4 +1,5 @@
 # Directory Sweeper (dir-sweep)
+[![Build Status](https://travis-ci.org/puhlenbruck/dir-sweep.svg?branch=master)](https://travis-ci.org/puhlenbruck/dir-sweep)
 
 A Utility to clean out old files from directories
 
