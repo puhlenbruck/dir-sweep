@@ -1,6 +1,6 @@
 module Main where
 
-import Sweep (run)
+import           Sweep                          ( run )
 
 main :: IO ()
 main = run

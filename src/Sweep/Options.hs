@@ -1,8 +1,8 @@
 module Sweep.Options (Options(..), SubDirMode(..)) where
 
-import Data.Time.Clock (DiffTime)
+import           Data.Time.Clock                ( DiffTime )
 
-data Options = Options 
+data Options = Options
   { dirs :: [FilePath]
   , thresholdAge :: Maybe DiffTime
   , maxKeepCount :: Maybe Int

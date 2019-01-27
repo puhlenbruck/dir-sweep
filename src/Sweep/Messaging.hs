@@ -1,6 +1,9 @@
 module Sweep.Messaging where
 
-import System.IO (hPrint, hPutStrLn, stderr)
+import           System.IO                      ( hPrint
+                                                , hPutStrLn
+                                                , stderr
+                                                )
 
 errPutStrLn :: String -> IO ()
 errPutStrLn = hPutStrLn stderr
